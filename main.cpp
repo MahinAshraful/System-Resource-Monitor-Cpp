@@ -16,30 +16,34 @@ int main(){
     #else
         std::cout <<"OS detected at compile time: Unknown\n";
     #endif
-
     CPUInfo cpu;
     MemoryInfo mem;
     ProcessManager pm;
-
-    //memory
     unsigned long long gb = 1024ULL * 1024 * 1024;
-    std::cout << "Total Memory: " << mem.getTotalMemory() / gb << "GB" << '\n';
-    std::cout << "Used Memory: " << mem.getUsedMemory() / gb << "GB" << '\n';
-    std::cout << "Available Memory: " << mem.getAvailableMemory() / gb << "GB" << '\n';
 
-    //cpu
-    //set small delay before first reading
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); // initial delay
 
-    for (int i = 0; i < 10; i++){
+    while (true){
+        // system("cls"); // windows
+        system("clear"); // linux
+        std::cout << "Memory------------------------" << '\n' << '\n';
+        std::cout << "Total Memory: " << mem.getTotalMemory() / gb << "GB" << '\n';
+        std::cout << "Used Memory: " << mem.getUsedMemory() / gb << "GB" << '\n';
+        std::cout << "Available Memory: " << mem.getAvailableMemory() / gb << "GB" << '\n';
+
+        std::cout << "CPU---------------------------" << '\n' << '\n';
+
         std::cout << "CPU USAGE: " << static_cast<int>(std::lround(cpu.getUsagePercent())) << "%" << '\n';
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
 
-    //processes
-    std::vector<ProcessInfo> topProcs = pm.getTopProcesses(10);
-    for (const auto& proc : topProcs) {
-        std::cout << proc.getName() << " - " << proc.getMemUsage() / (1024 * 1024) << " MB\n";
+        std::cout << "Top Processes------------------" << '\n' << '\n';
+
+
+        std::vector<ProcessInfo> topProcs = pm.getTopProcesses(10);
+        for (const auto& proc : topProcs) {
+            std::cout << proc.getName() << " - " << proc.getMemUsage() / (1024 * 1024) << " MB\n";
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
     return 0;
